@@ -135,3 +135,70 @@ CustomScrollView(
   ],
 )
 */
+class _SimpleHeader extends StatelessWidget {
+  final String userName;
+  final String userEmail;
+
+  const _SimpleHeader({
+    required this.userName,
+    required this.userEmail,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF6FBF44), Color(0xFF8EDC6E)],
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: const Icon(Icons.person, color: Colors.white, size: 28),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                userName,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                userEmail,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            color: Colors.grey.shade700,
+            onPressed: () {},
+          ),
+        ),
+      ],
+    );
+  }
+
+}// ============= CUSTOM SLIVER HEADER =============

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speedforce_ev/features/dashboard/fleet_screen.dart';
 import 'package:speedforce_ev/features/dashboard/profile_screen.dart';
 
 import 'dashboard_screen.dart';
@@ -15,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _screens = const [
     DashboardScreen(),
+    FleetScreen(),
     ProfileScreen(),
   ];
 
