@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speedforce_ev/core/widgets/section_header.dart';
+import 'package:speedforce_ev/features/dashboard/dashboard_screen/widget/dashboard_header.dart';
 
 class FleetScreen extends StatelessWidget {
   const FleetScreen({super.key});
@@ -14,7 +15,7 @@ class FleetScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _ModernHeader(userName: '', userEmail: '',),
+              const DashboardHeader(userName: '', userEmail: '',),
               const SizedBox(height: 14),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0,horizontal: 15),
