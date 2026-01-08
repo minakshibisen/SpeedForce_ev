@@ -9,7 +9,7 @@ import '../../../core/sevice/user_service.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_pin_input.dart';
 
-import '../../dashboard/dashboard_screen.dart';
+import '../../dashboard/dashboard_screen/dashboard_screen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String phoneNumber;
@@ -180,7 +180,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(AppDimensions.paddingLarge(context)),
+          padding: EdgeInsets.all(AppDimensions.paddingLarge),
           child: FadeTransition(
             opacity: _fadeAnimation,
             child: SlideTransition(

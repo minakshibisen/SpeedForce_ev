@@ -127,7 +127,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
               position: _slideAnimation,
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(
-                  horizontal: AppDimensions.paddingLarge(context),
+                  horizontal: AppDimensions.paddingLarge,
                 ),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
@@ -156,7 +156,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                                 scale: value,
                                 child: Container(
                                   padding: EdgeInsets.all(
-                                    AppDimensions.paddingMedium(context),
+                                    AppDimensions.paddingMedium,
                                   ),
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(

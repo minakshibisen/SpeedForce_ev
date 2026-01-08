@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:speedforce_ev/features/dashboard/fleet_screen.dart';
 import 'package:speedforce_ev/features/dashboard/profile_screen.dart';
 
-import 'dashboard_screen.dart';
+import 'dashboard_screen/dashboard_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

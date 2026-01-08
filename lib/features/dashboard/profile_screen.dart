@@ -20,38 +20,33 @@ class ProfileScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-
-
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             _ProfileSection(),
             const SizedBox(height: 24),
-
-            _InputField(label: 'Full Name', hint: 'User Name'),
-            _InputField(
+            const _InputField(label: 'Full Name', hint: 'User Name'),
+            const _InputField(
               label: 'Date of Birth',
               hint: '00/00/0000',
               suffix: Icons.calendar_today_outlined,
             ),
-            _InputField(
+            const _InputField(
               label: 'Email',
               hint: 'user.name@gmail.com',
               prefix: Icons.email_outlined,
             ),
-            _InputField(
+            const _InputField(
               label: 'Phone Number',
               hint: '+91 00000 00000',
               prefix: Icons.phone_outlined,
             ),
-            _InputField(
+            const _InputField(
               label: 'Nominee',
               hint: 'Nominee Name',
               prefix: Icons.person_outline,
             ),
-
             const SizedBox(height: 24),
             _PaymentMethodSection(),
             const SizedBox(height: 80),
@@ -62,15 +57,14 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-
 class _ProfileSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Stack(
+        const Stack(
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 44,
               backgroundColor: Color(0xFFE5E7EB),
               child: Icon(Icons.person, size: 40),
@@ -80,8 +74,9 @@ class _ProfileSection extends StatelessWidget {
               right: 0,
               child: CircleAvatar(
                 radius: 16,
-                backgroundColor: const Color(0xFF6FBF44),
-                child: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                backgroundColor: Color(0xFF6FBF44),
+                child:
+                    Icon(Icons.camera_alt, size: 16, color: Colors.white),
               ),
             ),
           ],
@@ -95,6 +90,7 @@ class _ProfileSection extends StatelessWidget {
     );
   }
 }
+
 class _InputField extends StatelessWidget {
   final String label;
   final String hint;
@@ -140,6 +136,7 @@ class _InputField extends StatelessWidget {
     );
   }
 }
+
 class _PaymentMethodSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -151,7 +148,6 @@ class _PaymentMethodSection extends StatelessWidget {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
-
         _BankTile(
           name: 'HDFC Bank',
           account: '•••• 1234',
@@ -161,17 +157,15 @@ class _PaymentMethodSection extends StatelessWidget {
           name: 'State Bank of India',
           account: '•••• 4321',
         ),
-
         TextButton.icon(
           onPressed: () {},
           icon: const Icon(Icons.add),
           label: const Text('Add New Bank'),
         ),
-
         const SizedBox(height: 8),
         Text(
           '• Once bank details are updated, further changes will be allowed after verification.\n'
-              '• Only one primary bank account is allowed.',
+          '• Only one primary bank account is allowed.',
           style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
         ),
       ],
@@ -201,10 +195,10 @@ class _BankTile extends StatelessWidget {
         subtitle: Text(account),
         trailing: primary
             ? Chip(
-          label: const Text('Primary'),
-          backgroundColor: const Color(0xFFDCFCE7),
-          labelStyle: const TextStyle(color: Color(0xFF166534)),
-        )
+                label: const Text('Primary'),
+                backgroundColor: const Color(0xFFDCFCE7),
+                labelStyle: const TextStyle(color: Color(0xFF166534)),
+              )
             : null,
       ),
     );

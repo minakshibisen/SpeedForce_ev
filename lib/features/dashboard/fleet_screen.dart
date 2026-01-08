@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speedforce_ev/core/widgets/section_header.dart';
 
 class FleetScreen extends StatelessWidget {
   const FleetScreen({super.key});
@@ -15,17 +16,9 @@ class FleetScreen extends StatelessWidget {
             children: [
               const _ModernHeader(userName: '', userEmail: '',),
               const SizedBox(height: 14),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 15),
-                child: const Text(
-                  'Live Locations',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black87,
-                    letterSpacing: -0.5,
-                  ),
-                ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0,horizontal: 15),
+                child:SectionHeader(title:' Live Location'),
               ),
               Expanded(
                 child: ListView.builder(

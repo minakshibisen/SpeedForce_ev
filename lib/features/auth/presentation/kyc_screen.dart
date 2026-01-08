@@ -6,7 +6,7 @@ import '../../../core/config/theme/text_styles.dart';
 import '../../../core/sevice/user_service.dart';
 import 'investment_slab_screen.dart';
 
-import '../../dashboard/dashboard_screen.dart';
+import '../../dashboard/dashboard_screen/dashboard_screen.dart';
 enum KycFlowMode {
   mandatory,
   optional,

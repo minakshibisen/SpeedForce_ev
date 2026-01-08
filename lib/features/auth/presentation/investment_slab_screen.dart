@@ -7,7 +7,7 @@ import '../../../core/config/theme/text_styles.dart';
 import '../../../core/widgets/custom_button.dart';
 
 // ✅ STEP 1: Import Dashboard
-import '../../dashboard/dashboard_screen.dart';
+import '../../dashboard/dashboard_screen/dashboard_screen.dart';
 
 class InvestmentSlabScreen extends StatefulWidget {
   const InvestmentSlabScreen({super.key});
@@ -121,7 +121,7 @@ class _InvestmentSlabScreenState extends State<InvestmentSlabScreen>
           child: SlideTransition(
             position: _slideAnimation,
             child: Padding(
-              padding: EdgeInsets.all(AppDimensions.paddingLarge(context)),
+              padding: EdgeInsets.all(AppDimensions.paddingLarge),
               child: Column(
                 children: [
                   const SizedBox(height: 16),
