@@ -59,7 +59,7 @@ class DashboardHeader extends StatelessWidget {
           height: 64,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [AppColors.primary, AppColors.secondary],
+              colors: [AppColors.primary, AppColors.primary],
             ),
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
