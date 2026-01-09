@@ -147,7 +147,7 @@ class _InvestmentSlabScreenState extends State<InvestmentSlabScreen>
       children: [
         ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFF6FBF44), Color(0xFF5BA437)],
+            colors: [ AppColors.primary, AppColors.primary],
           ).createShader(bounds),
           child: Text(
             'Choose Investment Slab',
@@ -182,7 +182,7 @@ class _InvestmentSlabScreenState extends State<InvestmentSlabScreen>
           height: 8,
           decoration: BoxDecoration(
             color:
-            index == 2 ? const Color(0xFF6FBF44) : const Color(0xFFE2E8F0),
+            index == 2 ?   AppColors.primary :  Color(0xFFE2E8F0),
             borderRadius: BorderRadius.circular(4),
           ),
         );
@@ -218,14 +218,14 @@ class _InvestmentSlabScreenState extends State<InvestmentSlabScreen>
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isSelected
-                    ? const Color(0xFF6FBF44)
+                    ?   AppColors.primary
                     : Colors.grey.shade200,
                 width: isSelected ? 2.5 : 1.5,
               ),
               boxShadow: [
                 BoxShadow(
                   color: isSelected
-                      ? const Color(0xFF6FBF44).withOpacity(0.25)
+                      ?   AppColors.primary.withOpacity(0.25)
                       : Colors.black.withOpacity(0.04),
                   blurRadius: isSelected ? 12 : 8,
                   offset: Offset(0, isSelected ? 4 : 2),
@@ -243,7 +243,7 @@ class _InvestmentSlabScreenState extends State<InvestmentSlabScreen>
                       fontWeight:
                       isSelected ? FontWeight.w700 : FontWeight.w500,
                       color:
-                      isSelected ? const Color(0xFF6FBF44) : Colors.black87,
+                      isSelected ?   AppColors.primary : Colors.black87,
                     ),
                   ),
                 ),
@@ -254,7 +254,7 @@ class _InvestmentSlabScreenState extends State<InvestmentSlabScreen>
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: const BoxDecoration(
-                      color: Color(0xFF6FBF44),
+                      color:  AppColors.primary,
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -283,7 +283,7 @@ class _InvestmentSlabScreenState extends State<InvestmentSlabScreen>
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFF6FBF44).withOpacity(0.3),
+                color:   AppColors.primary.withOpacity(0.3),
                 width: 1.5,
               ),
               boxShadow: [
@@ -309,7 +309,7 @@ class _InvestmentSlabScreenState extends State<InvestmentSlabScreen>
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF6FBF44),
+                  color:  AppColors.primary,
                 ),
               ),
             ),
@@ -323,13 +323,13 @@ class _InvestmentSlabScreenState extends State<InvestmentSlabScreen>
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               gradient: const LinearGradient(
-                colors: [Color(0xFF6FBF44), Color(0xFF5BA437)],
+                colors: [ AppColors.primary, AppColors.primary],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF6FBF44).withOpacity(0.4),
+                  color:   AppColors.primary.withOpacity(0.4),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),

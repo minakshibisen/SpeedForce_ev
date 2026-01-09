@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/config/theme/app_colors.dart';
+
 class InvestmentOverviewScreen extends StatelessWidget {
   const InvestmentOverviewScreen({super.key});
 
@@ -76,7 +78,7 @@ class _ProgressSection extends StatelessWidget {
                   value: 2 / 48,
                   strokeWidth: 12,
                   backgroundColor: const Color(0xFFF0F0F0),
-                  valueColor: const AlwaysStoppedAnimation(Color(0xFF6FBF44)),
+                  valueColor: const AlwaysStoppedAnimation( AppColors.primary),
                   strokeCap: StrokeCap.round,
                 ),
               ),
@@ -99,7 +101,7 @@ class _ProgressSection extends StatelessWidget {
                       child: const Icon(
                         Icons.event_note_rounded,
                         size: 26,
-                        color: Color(0xFF6FBF44),
+                        color:  AppColors.primary,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -157,7 +159,7 @@ class _SummarySection extends StatelessWidget {
                 child: _SummaryItem(
                   value: '₹500,000',
                   label: 'Investment Value',
-                  color: Color(0xFF6FBF44),
+                  color:  AppColors.primary,
                 ),
               ),
               const SizedBox(width: 12),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:speedforce_ev/features/dashboard/fleet_screen.dart';
 import 'package:speedforce_ev/features/dashboard/profile_screen.dart';
 
+import '../../core/config/theme/app_colors.dart';
 import 'dashboard_screen/dashboard_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        selectedItemColor: const Color(0xFF6FBF44),
+        selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {

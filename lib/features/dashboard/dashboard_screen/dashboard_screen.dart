@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:speedforce_ev/features/dashboard/dashboard_screen/widget/investment_calculator_card.dart';
-import 'package:speedforce_ev/features/dashboard/dashboard_screen/widget/why_invest_ebike_card.dart';
 import 'package:speedforce_ev/features/dashboard/investment_overview_screen.dart';
 import '../../../core/config/theme/app_colors.dart';
 import '../../../core/config/theme/app_dimensions.dart';
@@ -38,7 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   void _setupAnimations() {
     _animController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 600),
       vsync: this,
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -67,19 +66,9 @@ class _DashboardScreenState extends State<DashboardScreen>
       return Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                color: AppColors.primary,
-                strokeWidth: 3,
-              ),
-              SizedBox(height: AppDimensions.paddingMedium),
-              Text(
-                'Loading your dashboard...',
-                style: AppTextStyles.bodyMedium(context),
-              ),
-            ],
+          child: CircularProgressIndicator(
+            color: AppColors.primary,
+            strokeWidth: 2.5,
           ),
         ),
       );
@@ -93,20 +82,16 @@ class _DashboardScreenState extends State<DashboardScreen>
           slivers: [
             _buildAppBar(),
             SliverToBoxAdapter(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return Padding(
-                    padding: EdgeInsets.all(
-                      AppDimensions.responsive(
-                        context,
-                        mobile: 15,
-                        tablet: 24,
-                        desktop: 32,
-                      ),
-                    ),
-                    child: _buildContent(constraints),
-                  );
-                },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppDimensions.responsive(
+                    context,
+                    mobile: 16,
+                    tablet: 24,
+                    desktop: 32,
+                  ),
+                ),
+                child: _buildContent(),
               ),
             ),
           ],
@@ -117,7 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   Widget _buildAppBar() {
     final screenWidth = MediaQuery.of(context).size.width;
-    final appBarHeight = screenWidth < 600 ? 100.0 : screenWidth < 900 ? 110.0 : 120.0;
+    final appBarHeight = screenWidth < 600 ? 100.0 : 110.0;
 
     return SliverPersistentHeader(
       pinned: true,
@@ -132,33 +117,20 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  Widget _buildContent(BoxConstraints constraints) {
-    final isMobile = constraints.maxWidth < 600;
-    final isTablet = constraints.maxWidth >= 600 && constraints.maxWidth < 900;
-
+  Widget _buildContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Investment Status Section
-        if (_userState!.investmentCount == 0) ...[
-          _buildWelcomeBanner(),
-          SizedBox(height: AppDimensions.responsive(context, mobile: 20, tablet: 24, desktop: 28)),
-          _buildHowToInvestSection(),
-          SizedBox(height: AppDimensions.responsive(context, mobile: 20, tablet: 24, desktop: 28)),
-          EmptyInvestmentCard(
-            onInvestNow: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const KycVerificationScreen(
-                    mode: KycFlowMode.mandatory,
-                  ),
-                ),
-              );
-              _loadUserState();
-            },
-          ),
-        ] else ...[
+        SizedBox(height: 20),
+
+        // Latest News & Updates
+        _buildNewsSection(),
+        SizedBox(height: 24),
+
+        // Investment Status
+        if (_userState!.investmentCount == 0)
+          _buildFirstTimeUserSection()
+        else
           InvestmentSummaryCard(
             investmentValue: _userState!.totalInvestmentValue,
             monthlyRent: _userState!.totalMonthlyRent,
@@ -185,410 +157,358 @@ class _DashboardScreenState extends State<DashboardScreen>
             }
                 : null,
           ),
+
+        SizedBox(height: 32),
+
+        // Quick Stats
+        _buildQuickStats(),
+        SizedBox(height: 32),
+
+        // How It Works - Simple 3 Steps
+        if (_userState!.investmentCount == 0) ...[
+          _buildHowItWorksMinimal(),
+          SizedBox(height: 32),
         ],
-
-        SizedBox(height: AppDimensions.responsive(context, mobile: 28, tablet: 32, desktop: 40)),
-
-        // Trust Building Section
-        _buildTrustIndicators(),
-
-        SizedBox(height: AppDimensions.responsive(context, mobile: 28, tablet: 32, desktop: 40)),
 
         // Investment Calculator
         InvestmentCalculatorCard(),
+        SizedBox(height: 32),
 
-        SizedBox(height: AppDimensions.responsive(context, mobile: 28, tablet: 32, desktop: 40)),
-
-        // Why Invest Section
-        _buildWhyInvestSection(),
-
-        SizedBox(height: AppDimensions.responsive(context, mobile: 28, tablet: 32, desktop: 40)),
-
-        // Educational Content
-        if (_userState!.investmentCount == 0)
-          _buildEducationalSection(),
-
-        SizedBox(height: AppDimensions.responsive(context, mobile: 28, tablet: 32, desktop: 40)),
+        // Trust Badge
+        _buildTrustBadge(),
+        SizedBox(height: 32),
 
         // Video Section
         VideoSection(),
+        SizedBox(height: 32),
 
-        SizedBox(height: AppDimensions.responsive(context, mobile: 28, tablet: 32, desktop: 40)),
-
-        // Social Proof & Partners
-        _buildSocialProofSection(),
-
-        SizedBox(height: AppDimensions.responsive(context, mobile: 28, tablet: 32, desktop: 40)),
-
+        // Partners
         PartnersSection(),
-
-        SizedBox(height: AppDimensions.responsive(context, mobile: 28, tablet: 32, desktop: 40)),
-
-        // FAQ Section
-        _buildFAQSection(),
-
-        SizedBox(height: AppDimensions.paddingLarge),
+        SizedBox(height: 40),
       ],
     );
   }
 
-  Widget _buildWelcomeBanner() {
+  Widget _buildNewsSection() {
+    // Mock news data - replace with API call
+    final news = [
+      {
+        'tag': 'NEW',
+        'title': '1000+ E-bikes successfully deployed in Mumbai',
+        'time': '2 hours ago',
+        'color': Colors.green,
+      },
+      {
+        'tag': 'UPDATE',
+        'title': 'December rent payments completed - 100% on time',
+        'time': '5 hours ago',
+        'color': Colors.blue,
+      },
+      {
+        'tag': 'MILESTONE',
+        'title': 'SpeedForce crosses ₹100Cr in total investments',
+        'time': '1 day ago',
+        'color': Colors.orange,
+      },
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Latest Updates',
+              style: AppTextStyles.heading1(context).copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: Text('View All'),
+            ),
+          ],
+        ),
+        SizedBox(height: 12),
+        Container(
+          height: 100,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: news.length,
+            itemBuilder: (context, index) {
+              final item = news[index];
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                margin: EdgeInsets.only(right: 12),
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: (item['color'] as Color).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            item['tag'] as String,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: item['color'] as Color,
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          item['time'] as String,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      item['title'] as String,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        height: 1.3,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFirstTimeUserSection() {
     return Container(
-      padding: EdgeInsets.all(AppDimensions.responsive(context, mobile: 20, tablet: 24, desktop: 28)),
+      padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.primary, AppColors.primary.withOpacity(0.7)],
+          colors: [
+            AppColors.primary.withOpacity(0.05),
+            AppColors.primary.withOpacity(0.02),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 20,
-            offset: Offset(0, 10),
+        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.rocket_launch,
+                  color: AppColors.primary,
+                  size: 24,
+                ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Start Your Investment Journey',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'Join 5000+ investors earning monthly',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const KycVerificationScreen(
+                      mode: KycFlowMode.mandatory,
+                    ),
+                  ),
+                );
+                _loadUserState();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                padding: EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                'Get Started Now',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildQuickStats() {
+    final stats = [
+      {'value': '5000+', 'label': 'Investors', 'icon': Icons.people_outline},
+      {'value': '15%', 'label': 'Annual Return', 'icon': Icons.trending_up},
+      {'value': '₹50Cr+', 'label': 'Deployed', 'icon': Icons.account_balance_wallet_outlined},
+      {'value': '100%', 'label': 'On-time Rent', 'icon': Icons.verified_outlined},
+    ];
+
+    return Row(
+      children: stats.map((stat) {
+        return Expanded(
+          child: Container(
+            margin: EdgeInsets.only(right: stats.last == stat ? 0 : 8),
+            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Column(
+              children: [
+                Icon(
+                  stat['icon'] as IconData,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  stat['value'] as String,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  stat['label'] as String,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey[600],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildHowItWorksMinimal() {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '🎉 Welcome to SpeedForce EV Investment',
-            style: AppTextStyles.heading1(context).copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+            'How It Works',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 12),
-          Text(
-            'Start your journey to sustainable passive income through e-bike investments',
-            style: AppTextStyles.bodyMedium(context).copyWith(
-              color: Colors.white.withOpacity(0.9),
-            ),
-          ),
+          SizedBox(height: 20),
+          _buildStepItem(1, 'Verify KYC', 'Complete quick verification', true),
+          _buildStepItem(2, 'Choose Plan', 'Select investment amount', true),
+          _buildStepItem(3, 'Earn Monthly', 'Get consistent rental income', false),
         ],
       ),
     );
   }
 
-  Widget _buildHowToInvestSection() {
-    final steps = [
-      {
-        'icon': Icons.verified_user,
-        'title': 'Complete KYC',
-        'description': 'Quick 2-minute verification process',
-      },
-      {
-        'icon': Icons.payments,
-        'title': 'Choose Investment',
-        'description': 'Select from flexible investment plans',
-      },
-      {
-        'icon': Icons.electric_bike,
-        'title': 'E-bike Deployed',
-        'description': 'Your bike starts earning immediately',
-      },
-      {
-        'icon': Icons.account_balance_wallet,
-        'title': 'Earn Monthly',
-        'description': 'Receive consistent rental income',
-      },
-    ];
-
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensions.responsive(context, mobile: 20, tablet: 24, desktop: 28)),
-        child: Column(
+  Widget _buildStepItem(int number, String title, String subtitle, bool showLine) {
+    return Column(
+      children: [
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            Column(
               children: [
-                Icon(Icons.lightbulb, color: AppColors.primary, size: 28),
-                SizedBox(width: 12),
-                Text(
-                  'How to Get Started',
-                  style: AppTextStyles.heading1(context).copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 24),
-            ...steps.asMap().entries.map((entry) {
-              final index = entry.key;
-              final step = entry.value;
-              return Padding(
-                padding: EdgeInsets.only(bottom: index < steps.length - 1 ? 20 : 0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        step['icon'] as IconData,
-                        color: AppColors.primary,
-                        size: 24,
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${index + 1}. ${step['title']}',
-                            style: AppTextStyles.bodyLarge(context).copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            step['description'] as String,
-                            style: AppTextStyles.bodyMedium(context).copyWith(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTrustIndicators() {
-    final indicators = [
-      {'icon': Icons.security, 'value': '100%', 'label': 'Secure Payments'},
-      {'icon': Icons.verified, 'value': '5000+', 'label': 'Active Investors'},
-      {'icon': Icons.trending_up, 'value': '98%', 'label': 'Satisfaction Rate'},
-      {'icon': Icons.account_balance, 'value': '₹50Cr+', 'label': 'Assets Deployed'},
-    ];
-
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensions.responsive(context, mobile: 16, tablet: 20, desktop: 24)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Why Investors Trust Us',
-              style: AppTextStyles.heading1(context).copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: MediaQuery.of(context).size.width < 600 ? 2 : 4,
-                childAspectRatio: 1.3,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemCount: indicators.length,
-              itemBuilder: (context, index) {
-                final item = indicators[index];
-                return Container(
-                  padding: EdgeInsets.all(16),
+                Container(
+                  width: 32,
+                  height: 32,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: AppColors.primary.withOpacity(0.1),
-                    ),
+                    color: AppColors.primary.withOpacity(0.1),
+                    shape: BoxShape.circle,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        item['icon'] as IconData,
+                  child: Center(
+                    child: Text(
+                      number.toString(),
+                      style: TextStyle(
                         color: AppColors.primary,
-                        size: 32,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        item['value'] as String,
-                        style: AppTextStyles.heading2(context).copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        item['label'] as String,
-                        style: AppTextStyles.bodySmall(context),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                    ),
                   ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWhyInvestSection() {
-    final benefits = [
-      {
-        'icon': Icons.insights,
-        'title': 'Consistent Returns',
-        'description': 'Earn up to 12-15% annual returns through monthly rental income',
-      },
-      {
-        'icon': Icons.eco,
-        'title': 'Sustainable Impact',
-        'description': 'Contribute to green transportation and reduce carbon footprint',
-      },
-      {
-        'icon': Icons.lock,
-        'title': 'Asset-Backed Security',
-        'description': 'Your investment is backed by tangible e-bike assets',
-      },
-      {
-        'icon': Icons.access_time,
-        'title': 'Flexible Tenure',
-        'description': 'Choose investment periods that suit your financial goals',
-      },
-    ];
-
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensions.responsive(context, mobile: 20, tablet: 24, desktop: 28)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Why Invest in E-Bikes?',
-              style: AppTextStyles.heading1(context).copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20),
-            ...benefits.map((benefit) => Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                ),
+                if (showLine)
                   Container(
-                    padding: EdgeInsets.all(10),
+                    width: 2,
+                    height: 32,
+                    margin: EdgeInsets.symmetric(vertical: 4),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      benefit['icon'] as IconData,
-                      color: AppColors.primary,
-                      size: 24,
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(1),
                     ),
                   ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          benefit['title'] as String,
-                          style: AppTextStyles.bodyLarge(context).copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          benefit['description'] as String,
-                          style: AppTextStyles.bodyMedium(context).copyWith(
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )).toList(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEducationalSection() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensions.responsive(context, mobile: 20, tablet: 24, desktop: 28)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Investment Resources',
-              style: AppTextStyles.heading1(context).copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 16),
-            _buildResourceItem(
-              Icons.menu_book,
-              'Investment Guide',
-              'Learn the basics of e-bike investments',
-                  () {},
-            ),
-            Divider(height: 32),
-            _buildResourceItem(
-              Icons.calculate,
-              'ROI Calculator',
-              'Calculate potential returns on your investment',
-                  () {},
-            ),
-            Divider(height: 32),
-            _buildResourceItem(
-              Icons.question_answer,
-              'Talk to Expert',
-              'Get personalized investment advice',
-                  () {},
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildResourceItem(IconData icon, String title, String description, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(icon, color: AppColors.primary, size: 24),
+              ],
             ),
             SizedBox(width: 16),
             Expanded(
@@ -597,177 +517,79 @@ class _DashboardScreenState extends State<DashboardScreen>
                 children: [
                   Text(
                     title,
-                    style: AppTextStyles.bodyLarge(context).copyWith(
+                    style: TextStyle(
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 2),
                   Text(
-                    description,
-                    style: AppTextStyles.bodySmall(context).copyWith(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 13,
                       color: Colors.grey[600],
                     ),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSocialProofSection() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensions.responsive(context, mobile: 20, tablet: 24, desktop: 28)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'What Investors Say',
-              style: AppTextStyles.heading1(context).copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20),
-            _buildTestimonial(
-              'Rajesh Kumar',
-              'Invested ₹2,00,000',
-              'Great returns and hassle-free process. Receiving monthly rent on time!',
-              4.5,
-            ),
-            Divider(height: 32),
-            _buildTestimonial(
-              'Priya Sharma',
-              'Invested ₹5,00,000',
-              'Love the transparency and regular updates. Best passive income option.',
-              5.0,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTestimonial(String name, String investment, String review, double rating) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: AppColors.primary.withOpacity(0.2),
-              child: Text(
-                name[0],
-                style: TextStyle(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: AppTextStyles.bodyLarge(context).copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    investment,
-                    style: AppTextStyles.bodySmall(context).copyWith(
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                Icon(Icons.star, color: Colors.amber, size: 18),
-                SizedBox(width: 4),
-                Text(
-                  rating.toString(),
-                  style: AppTextStyles.bodyMedium(context).copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        SizedBox(height: 12),
-        Text(
-          review,
-          style: AppTextStyles.bodyMedium(context).copyWith(
-            color: Colors.grey[700],
-            fontStyle: FontStyle.italic,
-          ),
         ),
       ],
     );
   }
 
-  Widget _buildFAQSection() {
-    final faqs = [
-      {
-        'question': 'Is my investment safe?',
-        'answer': 'Yes, your investment is asset-backed and insured. We have robust security measures in place.',
-      },
-      {
-        'question': 'How soon can I start earning?',
-        'answer': 'Once your e-bike is deployed, you start earning rental income from the very first month.',
-      },
-      {
-        'question': 'Can I withdraw my investment anytime?',
-        'answer': 'Investment terms vary by plan. Early withdrawal options are available with specific conditions.',
-      },
-    ];
-
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensions.responsive(context, mobile: 20, tablet: 24, desktop: 28)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Frequently Asked Questions',
-              style: AppTextStyles.heading1(context).copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+  Widget _buildTrustBadge() {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
-            SizedBox(height: 16),
-            ...faqs.map((faq) => ExpansionTile(
-              tilePadding: EdgeInsets.zero,
-              title: Text(
-                faq['question']!,
-                style: AppTextStyles.bodyLarge(context).copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+            child: Icon(
+              Icons.shield_outlined,
+              color: Colors.green,
+              size: 28,
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(bottom: 16, right: 16),
-                  child: Text(
-                    faq['answer']!,
-                    style: AppTextStyles.bodyMedium(context).copyWith(
-                      color: Colors.grey[600],
-                    ),
+                Text(
+                  'RBI Registered & Insured',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Your investments are secure and protected',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey[600],
                   ),
                 ),
               ],
-            )).toList(),
-          ],
-        ),
+            ),
+          ),
+          Icon(
+            Icons.verified,
+            color: Colors.green,
+            size: 24,
+          ),
+        ],
       ),
     );
   }
