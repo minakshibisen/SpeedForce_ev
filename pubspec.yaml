@@ -36,7 +36,10 @@ dependencies:
   # Form Validation
   formz: ^0.6.1
 
-  # Utils
+  image_picker: ^1.0.4
+  permission_handler: ^11.0.1
+  http: ^1.1.0
+    # Utils
   intl: ^0.18.1
 
 dev_dependencies:
@@ -56,4 +59,12 @@ flutter:
     - assets/images/facebook.png
     - assets/images/apple.png
     - assets/images/transport.png
+    - assets/images/joy_img.png
+    - assets/images/wardwizard_logo.png
+    - assets/images/jiothings_logo.png
+    - assets/images/img.png
+    - assets/images/img_1.png
+    - assets/images/img_2.png
+    - assets/images/img_3.png
+
     - assets/icons/

@@ -1,28 +1,29 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/config/theme/app_colors.dart';
 import '../../../../core/config/theme/app_dimensions.dart';
-import '../../../../core/config/theme/text_styles.dart';
 import '../../../../core/widgets/section_header.dart';
-import '../dashboard_screen.dart';
 
 class PartnersSection extends StatelessWidget {
   const PartnersSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final partners = [
-      'Jio',
-      'Wardwizard',
-      'JioThings',
-      'Bluebells',
-      'HDFC Bank',
-      'Kotak',
-      'Electrik',
-      'SBI',
-      'Ampvolts',
+    final partnerLogos = [
+      'assets/images/joy_img.png',
+      'assets/images/wardwizard_logo.png',
+      'assets/images/jiothings_logo.png',
+      'assets/images/img.png',
+      'assets/images/img_1.png',
+      'assets/images/img_2.png',
+      'assets/images/img.png',
+      'assets/images/img_1.png',
+      'assets/images/img_2.png',
+
     ];
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final crossAxisCount = screenWidth < 600 ? 3 : screenWidth < 900 ? 4 : 5;
 
     return Column(
       children: [
@@ -31,30 +32,19 @@ class PartnersSection extends StatelessWidget {
           onSeeAll: () {},
         ),
         SizedBox(height: AppDimensions.paddingMedium),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final crossAxisCount = AppDimensions.responsive(
-              context,
-              mobile: 3,
-              tablet: 4,
-              desktop: 5,
-            ).toInt();
-
-            return GridView.builder(
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: partners.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                mainAxisSpacing: AppDimensions.paddingSmall,
-                crossAxisSpacing: AppDimensions.paddingSmall,
-                childAspectRatio: 2.1,
-              ),
-              itemBuilder: (context, index) {
-                return PartnerCard(name: partners[index]);
-              },
-            );
+        GridView.builder(
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: partnerLogos.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: AppDimensions.paddingSmall,
+            crossAxisSpacing: AppDimensions.paddingSmall,
+            childAspectRatio: 2.1,
+          ),
+          itemBuilder: (context, index) {
+            return PartnerCard(logoPath: partnerLogos[index]);
           },
         ),
       ],
@@ -64,11 +54,11 @@ class PartnersSection extends StatelessWidget {
 
 // ============= REUSABLE: PARTNER CARD =============
 class PartnerCard extends StatelessWidget {
-  final String name;
+  final String logoPath;
 
   const PartnerCard({
     super.key,
-    required this.name,
+    required this.logoPath,
   });
 
   @override
@@ -86,15 +76,20 @@ class PartnerCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Center(
-        child: Text(
-          name,
-          style: AppTextStyles.bodySmall(context).copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
-          ),
-          textAlign: TextAlign.center,
-        ),
+      padding: const EdgeInsets.all(0),
+      child: Image.asset(
+        logoPath,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          // Fallback icon if image not found
+          return Center(
+            child: Icon(
+              Icons.business,
+              color: AppColors.textSecondary.withOpacity(0.3),
+              size: 32,
+            ),
+          );
+        },
       ),
     );
   }

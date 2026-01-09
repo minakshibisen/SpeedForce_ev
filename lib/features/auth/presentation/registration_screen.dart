@@ -195,7 +195,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                         // Title with gradient
                         ShaderMask(
                           shaderCallback: (bounds) => const LinearGradient(
-                            colors: [Color(0xFF6FBF44), Color(0xFF5BA437)],
+                            colors: [AppColors.primary,AppColors.primary],
                           ).createShader(bounds),
                           child: Text(
                             'Create Account',

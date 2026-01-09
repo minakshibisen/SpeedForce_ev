@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:speedforce_ev/features/auth/presentation/investment_slab_screen.dart';
 import 'package:speedforce_ev/features/auth/presentation/kyc_screen.dart';
 import 'package:speedforce_ev/features/dashboard/home_screen.dart';
 import '../../../core/config/theme/app_colors.dart';
 import '../../../core/config/theme/app_dimensions.dart';
 import '../../../core/config/theme/text_styles.dart';
 import '../../../core/sevice/user_service.dart';
-import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_pin_input.dart';
-
-import '../../dashboard/dashboard_screen/dashboard_screen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String phoneNumber;
@@ -97,10 +95,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
     } else {
-      // 🔴 New User → KYC mandatory
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const KycVerificationScreen()),
+        MaterialPageRoute(builder: (_) => const InvestmentSlabScreen()),
       );
     }
   }
@@ -123,16 +120,17 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Row(
+          content: const Row(
             children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 12),
-              const Text('OTP sent successfully'),
+              Icon(Icons.check_circle, color: Colors.white),
+              SizedBox(width: 12),
+              Text('OTP sent successfully'),
             ],
           ),
           backgroundColor: AppColors.success,
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
+
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -180,7 +178,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(AppDimensions.paddingLarge),
+          padding: const EdgeInsets.all(AppDimensions.paddingLarge),
           child: FadeTransition(
             opacity: _fadeAnimation,
             child: SlideTransition(
@@ -196,7 +194,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
 
                     ShaderMask(
                       shaderCallback: (bounds) => const LinearGradient(
-                        colors: [Color(0xFF6FBF44), Color(0xFF5BA437)],
+                        colors: [ AppColors.primary,  AppColors.primary],
                       ).createShader(bounds),
                       child: Text(
                         'Verify Your Phone No.',
@@ -280,14 +278,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFF6FBF44).withOpacity(0.2),
-                  const Color(0xFF6FBF44).withOpacity(0.05),
+                   AppColors.primary.withOpacity(0.2),
+                  AppColors.primary.withOpacity(0.05),
                 ],
               ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF6FBF44).withOpacity(0.3),
+                  color: AppColors.primary.withOpacity(0.3),
                   blurRadius: 30,
                   offset: const Offset(0, 10),
                 ),
@@ -302,7 +300,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
               child: const Icon(
                 Icons.mark_email_read_outlined,
                 size: 56,
-                color: Color(0xFF6FBF44),
+                color:  AppColors.primary,
               ),
             ),
           ),
@@ -328,7 +326,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
             TextSpan(
               text: '+91 ${widget.phoneNumber}',
               style: const TextStyle(
-                color: Color(0xFF6FBF44),
+                color: AppColors.primary,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -358,7 +356,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
           Icon(
             _canResend ? Icons.refresh : Icons.access_time,
             size: 18,
-            color: _canResend ? const Color(0xFF6FBF44) : AppColors.textSecondary,
+            color: _canResend ? AppColors.primary : AppColors.textSecondary,
           ),
           const SizedBox(width: 8),
           if (_canResend)
@@ -367,10 +365,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
               child: Text(
                 'Resend OTP',
                 style: AppTextStyles.bodyMedium(context).copyWith(
-                  color: const Color(0xFF6FBF44),
+                  color: AppColors.primary,
                   fontWeight: FontWeight.w600,
                   decoration: TextDecoration.underline,
-                  decorationColor: const Color(0xFF6FBF44),
+                  decorationColor: AppColors.primary,
                 ),
               ),
             )
@@ -394,7 +392,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
         color: const Color(0xFFF0F9FF),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF6FBF44).withOpacity(0.2),
+          color: AppColors.primary.withOpacity(0.2),
         ),
       ),
       child: Row(
@@ -402,12 +400,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFF6FBF44).withOpacity(0.1),
+              color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
               Icons.info_outline,
-              color: Color(0xFF6FBF44),
+              color: AppColors.primary,
               size: 20,
             ),
           ),
@@ -426,7 +424,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
       ),
     );
   }
-
   // ✅ STEP 6: Updated Verify Button with OTP completion
   Widget _buildVerifyButton() {
     return Container(
@@ -435,13 +432,13 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: const LinearGradient(
-          colors: [Color(0xFF6FBF44), Color(0xFF5BA437)],
+          colors: [AppColors.primary, AppColors.primary],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6FBF44).withOpacity(0.4),
+            color: AppColors.primary.withOpacity(0.4),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
