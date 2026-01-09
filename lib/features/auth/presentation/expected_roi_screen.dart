@@ -128,12 +128,12 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF6FBF44),
+                  color:  AppColors.primary,
                 ),
                 decoration: InputDecoration(
                   prefixIcon: const Icon(
                     Icons.currency_rupee,
-                    color: Color(0xFF6FBF44),
+                    color:  AppColors.primary,
                     size: 28,
                   ),
                   hintText: 'Enter amount',
@@ -155,7 +155,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: const BorderSide(
-                      color: Color(0xFF6FBF44),
+                      color:  AppColors.primary,
                       width: 2,
                     ),
                   ),
@@ -199,7 +199,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
                               Text('Investment amount updated!'),
                             ],
                           ),
-                          backgroundColor: const Color(0xFF6FBF44),
+                          backgroundColor: AppColors.primary,
                           behavior: SnackBarBehavior.floating,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -209,7 +209,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6FBF44),
+                    backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -242,10 +242,10 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFF6FBF44).withOpacity(0.1),
+          color: AppColors.primary.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: const Color(0xFF6FBF44).withOpacity(0.3),
+            color: AppColors.primary.withOpacity(0.3),
           ),
         ),
         child: Text(
@@ -253,7 +253,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
           style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF6FBF44),
+            color:  AppColors.primary,
           ),
         ),
       ),
@@ -311,22 +311,22 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: const Color(0xFF6FBF44).withOpacity(0.1),
+              color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: const Color(0xFF6FBF44).withOpacity(0.3),
+                color: AppColors.primary.withOpacity(0.3),
               ),
             ),
             child: const Row(
               children: [
-                Icon(Icons.trending_up, color: Color(0xFF6FBF44), size: 16),
+                Icon(Icons.trending_up, color:  AppColors.primary, size: 16),
                 SizedBox(width: 4),
                 Text(
                   'Step 4 of 4',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF6FBF44),
+                    color:  AppColors.primary,
                   ),
                 ),
               ],
@@ -370,7 +370,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
       children: [
         ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFF6FBF44), Color(0xFF5BA437)],
+            colors: [ AppColors.primary,  AppColors.primary],
           ).createShader(bounds),
           child: Text(
             'Expected ROI',
@@ -389,7 +389,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
             color: const Color(0xFFF0F9FF),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: const Color(0xFF6FBF44).withOpacity(0.2),
+              color: AppColors.primary.withOpacity(0.2),
             ),
           ),
           child: Row(
@@ -398,13 +398,13 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
               const Icon(
                 Icons.calendar_today,
                 size: 14,
-                color: Color(0xFF6FBF44),
+                color:  AppColors.primary,
               ),
               const SizedBox(width: 6),
               Text(
                 '4 Year Investment Outlook',
                 style: AppTextStyles.bodyMedium(context).copyWith(
-                  color: const Color(0xFF6FBF44),
+                  color: AppColors.primary,
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -455,10 +455,10 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6FBF44).withOpacity(0.1),
+                        color: AppColors.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: const Color(0xFF6FBF44).withOpacity(0.3),
+                          color: AppColors.primary.withOpacity(0.3),
                         ),
                       ),
                       child: const Row(
@@ -466,7 +466,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
                           Icon(
                             Icons.edit,
                             size: 14,
-                            color: Color(0xFF6FBF44),
+                            color:  AppColors.primary,
                           ),
                           SizedBox(width: 4),
                           Text(
@@ -474,7 +474,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF6FBF44),
+                              color:  AppColors.primary,
                             ),
                           ),
                         ],
@@ -490,13 +490,13 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          const Color(0xFF6FBF44).withOpacity(0.15),
-                          const Color(0xFF6FBF44).withOpacity(0.05),
+                          AppColors.primary.withOpacity(0.15),
+                          AppColors.primary.withOpacity(0.05),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: const Color(0xFF6FBF44).withOpacity(0.3),
+                        color: AppColors.primary.withOpacity(0.3),
                       ),
                     ),
                     child: const Text(
@@ -504,7 +504,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF6FBF44),
+                        color:  AppColors.primary,
                       ),
                     ),
                   ),
@@ -517,14 +517,14 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFF6FBF44), Color(0xFF8EDC6E)],
+                colors: [ AppColors.primary,  AppColors.primary],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF6FBF44).withOpacity(0.4),
+                  color: AppColors.primary.withOpacity(0.4),
                   blurRadius: 15,
                   offset: const Offset(0, 6),
                 ),
@@ -559,13 +559,13 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         gradient: const LinearGradient(
-          colors: [Color(0xFF6FBF44), Color(0xFF8EDC6E)],
+          colors: [ AppColors.primary,  AppColors.primary],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6FBF44).withOpacity(0.4),
+            color: AppColors.primary.withOpacity(0.4),
             blurRadius: 25,
             offset: const Offset(0, 10),
           ),
@@ -652,12 +652,12 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6FBF44).withOpacity(0.1),
+                  color: AppColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
                   Icons.bar_chart,
-                  color: Color(0xFF6FBF44),
+                  color:  AppColors.primary,
                   size: 18,
                 ),
               ),
@@ -701,11 +701,11 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: isHighlighted
-            ? const Color(0xFF6FBF44).withOpacity(0.08)
+            ? AppColors.primary.withOpacity(0.08)
             : const Color(0xFFF8F9FB),
         borderRadius: BorderRadius.circular(14),
         border: isHighlighted
-            ? Border.all(color: const Color(0xFF6FBF44).withOpacity(0.3))
+            ? Border.all(color: AppColors.primary.withOpacity(0.3))
             : null,
       ),
       child: Row(
@@ -714,7 +714,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: isHighlighted
-                  ? const Color(0xFF6FBF44).withOpacity(0.15)
+                  ? AppColors.primary.withOpacity(0.15)
                   : Colors.white,
               borderRadius: BorderRadius.circular(8),
             ),
@@ -722,7 +722,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
               icon,
               size: 16,
               color: isHighlighted
-                  ? const Color(0xFF6FBF44)
+                  ? AppColors.primary
                   : Colors.grey.shade600,
             ),
           ),
@@ -743,7 +743,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
               fontSize: 15,
               fontWeight: FontWeight.w700,
               color:
-              isHighlighted ? const Color(0xFF6FBF44) : Colors.black87,
+              isHighlighted ? AppColors.primary : Colors.black87,
             ),
           ),
         ],
@@ -761,7 +761,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFF6FBF44).withOpacity(0.3),
+                color: AppColors.primary.withOpacity(0.3),
                 width: 1.5,
               ),
             ),
@@ -780,7 +780,7 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF6FBF44),
+                  color:  AppColors.primary,
                 ),
               ),
             ),
@@ -794,13 +794,13 @@ class _ExpectedRoiScreenState extends State<ExpectedRoiScreen>
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               gradient: const LinearGradient(
-                colors: [Color(0xFF6FBF44), Color(0xFF5BA437)],
+                colors: [ AppColors.primary,  AppColors.primary],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF6FBF44).withOpacity(0.4),
+                  color: AppColors.primary.withOpacity(0.4),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),

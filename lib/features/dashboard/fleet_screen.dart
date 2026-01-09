@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:speedforce_ev/core/widgets/section_header.dart';
 import 'package:speedforce_ev/features/dashboard/dashboard_screen/widget/dashboard_header.dart';
 
+import '../../core/config/theme/app_colors.dart';
+
 class FleetScreen extends StatelessWidget {
   const FleetScreen({super.key});
 
@@ -66,7 +68,7 @@ class _ModernHeader extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             Colors.white,
-            const Color(0xFF6FBF44).withOpacity(0.05),
+            AppColors.primary.withOpacity(0.05),
           ],
         ),
       ),
@@ -80,12 +82,12 @@ class _ModernHeader extends StatelessWidget {
                 height: 64,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF6FBF44), Color(0xFF8EDC6E)],
+                    colors: [ AppColors.primary,  AppColors.primary],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF6FBF44).withOpacity(0.3),
+                      color: AppColors.primary.withOpacity(0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -237,7 +239,7 @@ class _Header extends StatelessWidget {
                 width: 16,
                 height: 16,
                 decoration: const BoxDecoration(
-                  color: Color(0xFF6FBF44),
+                  color:  AppColors.primary,
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
