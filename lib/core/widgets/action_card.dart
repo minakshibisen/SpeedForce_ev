@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../config/theme/app_colors.dart';
+
 class ActionCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -37,7 +39,7 @@ class ActionCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 28, color: const Color(0xFF6FBF44)),
+            Icon(icon, size: 28, color: AppColors.primary),
             const SizedBox(height: 8),
             Text(
               title,
