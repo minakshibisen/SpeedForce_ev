@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speedforce_ev/features/auth/presentation/onboarding_screen.dart';
 import 'package:speedforce_ev/features/auth/presentation/registration_screen.dart';
 import '../core/config/theme/app_colors.dart';
 import '../core/config/theme/app_dimensions.dart';
@@ -70,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen>
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [ AppColors.primary,  AppColors.primary],
+            colors: [ AppColors.primary, Color(0xff1866a9)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -227,7 +228,7 @@ class _SplashScreenState extends State<SplashScreen>
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                      const RegistrationScreen(),
+                                      const OnboardingScreen(),
                                     ),
                                   );
                                 },

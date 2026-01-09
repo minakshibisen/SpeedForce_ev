@@ -8,8 +8,6 @@ import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../../../core/widgets/social_signin_button.dart';
 
-
-
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
@@ -25,7 +23,6 @@ class _RegistrationScreenState extends State<RegistrationScreen>
   final _phoneController = TextEditingController();
   bool _isLoading = false;
 
-  // Animation controllers
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -60,19 +57,15 @@ class _RegistrationScreenState extends State<RegistrationScreen>
     super.dispose();
   }
 
-  // ✅ STEP 2: Update _onRegister method
   void _onRegister() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
 
-      // Simulate API call
       await Future.delayed(const Duration(seconds: 2));
 
       if (mounted) {
         setState(() => _isLoading = false);
 
-        // ✅ STEP 3: Save registration data
-        // Yahan par aap API se mila userId save karenge
         await UserService.completeRegistration(
           userId: 'user_${DateTime.now().millisecondsSinceEpoch}',
           userName: _nameController.text,
@@ -80,7 +73,6 @@ class _RegistrationScreenState extends State<RegistrationScreen>
           userPhone: _phoneController.text,
         );
 
-        // Navigate to OTP screen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -94,23 +86,19 @@ class _RegistrationScreenState extends State<RegistrationScreen>
   }
 
   void _onGoogleSignIn() {
-    // TODO: Implement Google Sign In
     print('Google Sign In clicked');
   }
 
   void _onFacebookSignIn() {
-    // TODO: Implement Facebook Sign In
     print('Facebook Sign In clicked');
   }
 
   void _onAppleSignIn() {
-    // TODO: Implement Apple Sign In
     print('Apple Sign In clicked');
   }
 
   void _onLoginTap() {
-    // TODO: Navigate to login screen
-    print('Login clicked');
+    Navigator.pop(context);
   }
 
   @override
@@ -118,7 +106,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
     AppDimensions.init(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFB),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: FadeTransition(
@@ -145,7 +133,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                       children: [
                         SizedBox(height: AppDimensions.spacingLarge(context)),
 
-                        // Enhanced Logo
+                        // Logo Section
                         Center(
                           child: TweenAnimationBuilder<double>(
                             tween: Tween(begin: 0.0, end: 1.0),
@@ -155,32 +143,23 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                               return Transform.scale(
                                 scale: value,
                                 child: Container(
-                                  padding: EdgeInsets.all(
-                                    AppDimensions.paddingMedium,
-                                  ),
+                                  padding: const EdgeInsets.all(24),
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        AppColors.primary.withOpacity(0.2),
-                                        AppColors.primary.withOpacity(0.1),
-                                      ],
-                                    ),
+                                    color: const Color(0xFFF0F9FF),
+                                    // Light blue background
                                     shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.primary.withOpacity(0.3),
-                                        blurRadius: 20,
-                                        offset: const Offset(0, 8),
-                                      ),
-                                    ],
+                                    border: Border.all(
+                                      color: const Color(0xFFBAE6FD),
+                                      width: 2,
+                                    ),
                                   ),
                                   child: Icon(
-                                    Icons.electric_car,
+                                    Icons.electric_bike_rounded,
                                     size: AppDimensions.responsive(
                                       context,
-                                      mobile: 64,
-                                      tablet: 72,
-                                      desktop: 80,
+                                      mobile: 56,
+                                      tablet: 64,
+                                      desktop: 72,
                                     ),
                                     color: AppColors.primary,
                                   ),
@@ -192,28 +171,27 @@ class _RegistrationScreenState extends State<RegistrationScreen>
 
                         SizedBox(height: AppDimensions.spacingLarge(context)),
 
-                        // Title with gradient
-                        ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [AppColors.primary,AppColors.primary],
-                          ).createShader(bounds),
-                          child: Text(
-                            'Create Account',
-                            style: AppTextStyles.heading2(context).copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
+                        // Title
+                        Text(
+                          'Create Account',
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF111827), // Dark gray
+                            letterSpacing: -0.5,
                           ),
+                          textAlign: TextAlign.center,
                         ),
 
-                        SizedBox(height: AppDimensions.spacingSmall(context)),
+                        const SizedBox(height: 8),
 
                         // Subtitle
                         Text(
                           'Join us to start your EV investment journey',
-                          style: AppTextStyles.bodyMedium(context).copyWith(
-                            color: AppColors.textSecondary,
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w400,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -240,6 +218,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
 
                         SizedBox(height: AppDimensions.spacingMedium(context)),
 
+                        // Phone Field
                         PhoneTextField(
                           controller: _phoneController,
                         ),
@@ -256,7 +235,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                         // Create Account Button
                         CustomButton(
                           text: 'Create Account',
-                          onPressed: _onRegister, // ✅ Updated method
+                          onPressed: _onRegister,
                           isLoading: _isLoading,
                           height: AppDimensions.buttonHeightL,
                         ),
@@ -266,19 +245,30 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                         // Divider with "OR"
                         Row(
                           children: [
-                            const Expanded(
-                                child: Divider(color: AppColors.border)),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppDimensions.spaceM,
-                              ),
-                              child: Text(
-                                'OR',
-                                style: AppTextStyles.bodySmall(context),
+                            Expanded(
+                              child: Divider(
+                                color: Colors.grey.shade300,
+                                thickness: 1,
                               ),
                             ),
-                            const Expanded(
-                                child: Divider(color: AppColors.border)),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                'OR',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey.shade600,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Divider(
+                                color: Colors.grey.shade300,
+                                thickness: 1,
+                              ),
+                            ),
                           ],
                         ),
 
@@ -286,43 +276,47 @@ class _RegistrationScreenState extends State<RegistrationScreen>
 
                         // Social Sign In Buttons
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             SocialSignInButton(
-                              provider: SocialProvider.google,
-                              onPressed: _onGoogleSignIn,
-                            ),
+                                provider: SocialProvider.google,
+                                onPressed: () {}),
                             SocialSignInButton(
-                              provider: SocialProvider.facebook,
-                              onPressed: _onFacebookSignIn,
-                            ),
+                                provider: SocialProvider.facebook,
+                                onPressed: () {}),
                             SocialSignInButton(
-                              provider: SocialProvider.apple,
-                              onPressed: _onAppleSignIn,
-                            ),
+                                provider: SocialProvider.apple,
+                                onPressed: () {}),
                           ],
                         ),
 
                         SizedBox(height: AppDimensions.spacingLarge(context)),
 
+                        // Login Link
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               'Already have an account? ',
-                              style: AppTextStyles.bodyMedium(context),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade700,
+                              ),
                             ),
                             TextButton(
                               onPressed: _onLoginTap,
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.zero,
                                 minimumSize: Size.zero,
-                                tapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: Text(
                                 'Login',
-                                style: AppTextStyles.link(context),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ),
                           ],
@@ -336,6 +330,35 @@ class _RegistrationScreenState extends State<RegistrationScreen>
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSocialButton({
+    required IconData icon,
+    required Color color,
+    required Color backgroundColor,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: color.withOpacity(0.2),
+            width: 1,
+          ),
+        ),
+        child: Icon(
+          icon,
+          color: color,
+          size: 28,
         ),
       ),
     );

@@ -34,7 +34,7 @@ class AppColors {
   static const darkTextSecondary = Color(0xFFB0B0B0);
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [Color(0xFF00C853), Color(0xFF64DD17)],
+    colors: [Color(0xff1866a9),AppColors.primary],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

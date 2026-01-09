@@ -1,96 +1,187 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/config/theme/app_colors.dart';
-import '../../../../core/config/theme/app_dimensions.dart';
-import '../../../../core/widgets/section_header.dart';
+/// Reusable Partner Card Widget
+///
+/// Usage:
+/// ```dart
+/// PartnerCard(
+///   logoPath: 'assets/images/partner_logo.png',
+///   width: 160,
+///   height: 90,
+/// )
+/// ```
+class PartnerCard extends StatelessWidget {
+  final String logoPath;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final Color? backgroundColor;
+  final Color? borderColor;
+  final double? borderRadius;
+  final VoidCallback? onTap;
 
-class PartnersSection extends StatelessWidget {
-  const PartnersSection({super.key});
+  const PartnerCard({
+    super.key,
+    required this.logoPath,
+    this.width,
+    this.height,
+    this.padding,
+    this.margin,
+    this.backgroundColor,
+    this.borderColor,
+    this.borderRadius,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final partnerLogos = [
-      'assets/images/joy_img.png',
-      'assets/images/wardwizard_logo.png',
-      'assets/images/jiothings_logo.png',
-      'assets/images/img.png',
-      'assets/images/img_1.png',
-      'assets/images/img_2.png',
-      'assets/images/img.png',
-      'assets/images/img_1.png',
-      'assets/images/img_2.png',
-
-    ];
-
-    final screenWidth = MediaQuery.of(context).size.width;
-    final crossAxisCount = screenWidth < 600 ? 3 : screenWidth < 900 ? 4 : 5;
-
-    return Column(
-      children: [
-        SectionHeader(
-          title: 'Our Partners',
-          onSeeAll: () {},
-        ),
-        SizedBox(height: AppDimensions.paddingMedium),
-        GridView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: partnerLogos.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: AppDimensions.paddingSmall,
-            crossAxisSpacing: AppDimensions.paddingSmall,
-            childAspectRatio: 2.1,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: width ?? 160,
+        height: height ?? 90,
+        margin: margin ?? const EdgeInsets.only(right: 12),
+        padding: padding ?? const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: backgroundColor ?? Colors.white,
+          borderRadius: BorderRadius.circular(borderRadius ?? 14),
+          border: Border.all(
+            color: borderColor ?? const Color(0xFFE5E7EB),
+            width: 1,
           ),
-          itemBuilder: (context, index) {
-            return PartnerCard(logoPath: partnerLogos[index]);
+        ),
+        child: Image.asset(
+          logoPath,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) {
+            return Center(
+              child: Icon(
+                Icons.business,
+                color: Colors.grey.shade400,
+                size: 32,
+              ),
+            );
           },
+        ),
+      ),
+    );
+  }
+}
+
+/// Partners Section using the reusable PartnerCard
+///
+/// This is a complete implementation showing how to use PartnerCard
+class PartnersSection extends StatelessWidget {
+  final List<String> partnerLogos;
+  final String title;
+  final VoidCallback? onViewAll;
+  final Color? primaryColor;
+  final double cardWidth;
+  final double cardHeight;
+
+  const PartnersSection({
+    super.key,
+    required this.partnerLogos,
+    this.title = 'Our Partners',
+    this.onViewAll,
+    this.primaryColor,
+    this.cardWidth = 160,
+    this.cardHeight = 90,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF111827),
+              ),
+            ),
+            if (onViewAll != null)
+              TextButton.icon(
+                onPressed: onViewAll,
+                icon: const Text(
+                  'View All',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                label: const Icon(Icons.arrow_forward_ios, size: 14),
+                style: TextButton.styleFrom(
+                  foregroundColor: primaryColor ?? const Color(0xFF3B82F6),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: cardHeight,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: partnerLogos.length,
+            itemBuilder: (context, index) {
+              return PartnerCard(
+                logoPath: partnerLogos[index],
+                width: cardWidth,
+                height: cardHeight,
+                onTap: () {
+                  // Handle partner card tap
+                  debugPrint('Tapped on partner: ${partnerLogos[index]}');
+                },
+              );
+            },
+          ),
         ),
       ],
     );
   }
 }
 
-// ============= REUSABLE: PARTNER CARD =============
-class PartnerCard extends StatelessWidget {
-  final String logoPath;
-
-  const PartnerCard({
-    super.key,
-    required this.logoPath,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(0),
-      child: Image.asset(
-        logoPath,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          // Fallback icon if image not found
-          return Center(
-            child: Icon(
-              Icons.business,
-              color: AppColors.textSecondary.withOpacity(0.3),
-              size: 32,
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
+/// Example Usage in Dashboard
+///
+/// ```dart
+/// // Simple usage with default styling
+/// PartnersSection(
+///   partnerLogos: [
+///     'assets/images/joy_img.png',
+///     'assets/images/wardwizard_logo.png',
+///     'assets/images/jiothings_logo.png',
+///   ],
+/// )
+///
+/// // Custom usage with options
+/// PartnersSection(
+///   partnerLogos: partnerList,
+///   title: 'Trusted Partners',
+///   primaryColor: AppColors.primary,
+///   cardWidth: 180,
+///   cardHeight: 100,
+///   onViewAll: () {
+///     Navigator.push(context, MaterialPageRoute(
+///       builder: (_) => AllPartnersScreen(),
+///     ));
+///   },
+/// )
+///
+/// // Use PartnerCard individually anywhere
+/// PartnerCard(
+///   logoPath: 'assets/images/partner.png',
+///   width: 200,
+///   height: 120,
+///   backgroundColor: Colors.grey.shade50,
+///   borderColor: Colors.blue,
+///   borderRadius: 20,
+///   onTap: () => print('Partner tapped'),
+/// )
+/// ```

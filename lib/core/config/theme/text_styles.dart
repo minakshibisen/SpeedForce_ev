@@ -5,7 +5,6 @@ import 'app_dimensions.dart';
 
 class AppTextStyles {
 
-
   static TextStyle heading1(BuildContext context) => GoogleFonts.inter(
     fontSize: AppDimensions.responsive(context, mobile: 32, tablet: 36, desktop: 40),
     fontWeight: FontWeight.bold,

@@ -30,7 +30,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
   bool _isVerifying = false;
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
@@ -41,16 +40,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
 
   void _setupAnimations() {
     _animController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 600),
       vsync: this,
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
     _animController.forward();
   }
 
@@ -78,10 +73,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
   void _onOtpCompleted(String otp) async {
     setState(() => _isVerifying = true);
 
-    // ✅ OTP complete
     await UserService.completeOTP();
-
-    // 🔥 MOST IMPORTANT: mobile ke base par user state set
     await UserService.loginWithMobile(widget.phoneNumber);
 
     final userState = await UserService.getUserState();
@@ -89,7 +81,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
     setState(() => _isVerifying = false);
 
     if (userState.hasCompletedKYC) {
-      // 🟢 Investor → Direct Dashboard
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -102,17 +93,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
     }
   }
 
-  // ✅ STEP 2: Add navigation to KYC
-  void _navigateToKyc() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const KycVerificationScreen(),
-      ),
-    );
-  }
-
-
   void _onResend() {
     if (_canResend) {
       _pinKey.currentState?.clear();
@@ -120,20 +100,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.white),
-              SizedBox(width: 12),
-              Text('OTP sent successfully'),
-            ],
-          ),
-          backgroundColor: AppColors.success,
+          content: const Text('OTP sent successfully!'),
+          backgroundColor: const Color(0xFF10B981),
           behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           margin: const EdgeInsets.all(16),
         ),
       );
@@ -149,384 +119,215 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
 
   @override
   Widget build(BuildContext context) {
-    AppDimensions.init(context);
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFB),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            child: const Icon(Icons.arrow_back, color: Colors.black87, size: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        // ✅ STEP 4: Add Skip button in AppBar
-
-      ),
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppDimensions.paddingLarge),
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: SlideTransition(
-              position: _slideAnimation,
-              child: SingleChildScrollView(
-                child: Column(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Column(
+            children: [
+              // Custom AppBar
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
                   children: [
-                    SizedBox(height: AppDimensions.spacingLarge(context)),
-
-                    _buildAnimatedIcon(),
-
-                    SizedBox(height: AppDimensions.spacingXLarge(context)),
-
-                    ShaderMask(
-                      shaderCallback: (bounds) => const LinearGradient(
-                        colors: [ AppColors.primary,  AppColors.primary],
-                      ).createShader(bounds),
-                      child: Text(
-                        'Verify Your Phone No.',
-                        style: AppTextStyles.heading3(context).copyWith(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade200),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        textAlign: TextAlign.center,
+                        child: const Icon(Icons.arrow_back, size: 20),
                       ),
                     ),
-
-                    SizedBox(height: AppDimensions.spacingSmall(context)),
-
-                    _buildSubtitle(),
-
-                    SizedBox(height: AppDimensions.spacingXLarge(context)),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: CustomPinInput(
-                        key: _pinKey,
-                        length: 6,
-                        onCompleted: _onOtpCompleted,
-                        fieldWidth: AppDimensions.responsive(
-                          context,
-                          mobile: 48,
-                          tablet: 56,
-                          desktop: 64,
-                        ),
-                        fieldHeight: AppDimensions.responsive(
-                          context,
-                          mobile: 56,
-                          tablet: 64,
-                          desktop: 72,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: AppDimensions.spacingLarge(context)),
-
-                    _buildResendSection(),
-
-                    SizedBox(height: AppDimensions.spacingMedium(context)),
-
-                    _buildInfoCard(),
-
-                    SizedBox(height: AppDimensions.spacingXLarge(context)),
-
-                    // ✅ STEP 5: Updated Verify Button
-                    _buildVerifyButton(),
-
-                    SizedBox(height: AppDimensions.spacingMedium(context)),
-
-                    _buildSecurityBadge(),
-
-                    SizedBox(height: AppDimensions.spacingMedium(context)),
                   ],
                 ),
               ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildAnimatedIcon() {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: const Duration(milliseconds: 1000),
-      curve: Curves.elasticOut,
-      builder: (context, value, child) {
-        return Transform.scale(
-          scale: value,
-          child: Container(
-            width: 140,
-            height: 140,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                   AppColors.primary.withOpacity(0.2),
-                  AppColors.primary.withOpacity(0.05),
-                ],
-              ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
-                  blurRadius: 30,
-                  offset: const Offset(0, 10),
+              // Content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+
+                      // Illustration/Icon
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.phone_android_rounded,
+                          size: 50,
+                          color: AppColors.primary,
+                        ),
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      // Title
+                      const Text(
+                        'Verification Code',
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1A1A1A),
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // Description
+                      Text(
+                        'We have sent a verification code to',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey.shade600,
+                          height: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '+91 ${widget.phoneNumber}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                        ),
+                      ),
+
+                      const SizedBox(height: 40),
+
+                      // OTP Input
+                      CustomPinInput(
+                        key: _pinKey,
+                        length: 6,
+                        onCompleted: _onOtpCompleted,
+                        fieldWidth: 48,
+                        fieldHeight: 56,
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      // Resend Section
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _canResend
+                                ? "Didn't receive code? "
+                                : 'Resend code in ',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          if (_canResend)
+                            GestureDetector(
+                              onTap: _onResend,
+                              child: Text(
+                                'Resend',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            )
+                          else
+                            Text(
+                              _formatTime(_resendTimer),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 40),
+
+                      // Verify Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 54,
+                        child: ElevatedButton(
+                          onPressed: _isVerifying
+                              ? null
+                              : () async {
+                            setState(() => _isVerifying = true);
+
+                            await UserService.completeOTP();
+                            await UserService.loginWithMobile(
+                                widget.phoneNumber);
+
+                            final userState =
+                            await UserService.getUserState();
+
+                            setState(() => _isVerifying = false);
+
+                            if (userState.hasCompletedKYC) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const HomeScreen()),
+                              );
+                            } else {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                  const KycVerificationScreen(),
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: _isVerifying
+                              ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white),
+                            ),
+                          )
+                              : const Text(
+                            'Verify',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 40),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-            child: Container(
-              margin: const EdgeInsets.all(12),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.mark_email_read_outlined,
-                size: 56,
-                color:  AppColors.primary,
-              ),
-            ),
+            ],
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildSubtitle() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          style: AppTextStyles.bodyMedium(context).copyWith(
-            color: AppColors.textSecondary,
-            height: 1.6,
-          ),
-          children: [
-            const TextSpan(
-              text: 'To verify your account, Enter the 6 digit OTP code that we sent to your mobile number\n',
-            ),
-            TextSpan(
-              text: '+91 ${widget.phoneNumber}',
-              style: const TextStyle(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildResendSection() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            _canResend ? Icons.refresh : Icons.access_time,
-            size: 18,
-            color: _canResend ? AppColors.primary : AppColors.textSecondary,
-          ),
-          const SizedBox(width: 8),
-          if (_canResend)
-            GestureDetector(
-              onTap: _onResend,
-              child: Text(
-                'Resend OTP',
-                style: AppTextStyles.bodyMedium(context).copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.primary,
-                ),
-              ),
-            )
-          else
-            Text(
-              'Resend OTP in ${_formatTime(_resendTimer)}',
-              style: AppTextStyles.bodyMedium(context).copyWith(
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0F9FF),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.primary.withOpacity(0.2),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(
-              Icons.info_outline,
-              color: AppColors.primary,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Please check your SMS inbox for the verification code',
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey.shade700,
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  // ✅ STEP 6: Updated Verify Button with OTP completion
-  Widget _buildVerifyButton() {
-    return Container(
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.primary],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.4),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: _isVerifying
-            ? null
-            : () async {
-          setState(() => _isVerifying = true);
-
-          await UserService.completeOTP();
-          await UserService.loginWithMobile(widget.phoneNumber);
-
-          final userState = await UserService.getUserState();
-
-          setState(() => _isVerifying = false);
-
-          if (userState.hasCompletedKYC) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
-            );
-          } else {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const KycVerificationScreen(),
-              ),
-            );
-          }
-        },
-
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          disabledBackgroundColor: Colors.grey.shade300,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-        child: _isVerifying
-            ? const SizedBox(
-          width: 24,
-          height: 24,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.5,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        )
-            : const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Verify & Continue',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(width: 8),
-            Icon(Icons.arrow_forward, size: 20, color: Colors.white),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSecurityBadge() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.verified_user,
-          size: 16,
-          color: Colors.grey.shade600,
-        ),
-        const SizedBox(width: 6),
-        Text(
-          'Your information is secured and encrypted',
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
-        ),
-      ],
     );
   }
 
