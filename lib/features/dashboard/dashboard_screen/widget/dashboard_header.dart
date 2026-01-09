@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/config/theme/app_colors.dart';
-import '../../../../core/config/theme/app_dimensions.dart';
-import '../../../../core/config/theme/text_styles.dart';
 
 class DashboardHeader extends StatelessWidget {
   final String userName;
@@ -17,37 +15,36 @@ class DashboardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 600;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
 
-        return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white,
-                AppColors.primary.withOpacity(0.05),
-              ],
-            ),
-          ),
-          padding: EdgeInsets.fromLTRB(
-            AppDimensions.responsive(context, mobile: 20, tablet: 32, desktop: 40),
-            AppDimensions.responsive(context, mobile: 60, tablet: 70, desktop: 80),
-            AppDimensions.responsive(context, mobile: 20, tablet: 32, desktop: 40),
-            AppDimensions.paddingMedium,
-          ),
-          child: Row(
-            children: [
-              _buildAvatar(),
-              SizedBox(width: AppDimensions.paddingMedium),
-              Expanded(child: _buildUserInfo(context)),
-              _buildNotificationButton(),
-            ],
-          ),
-        );
-      },
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+
+            AppColors.primary,
+            AppColors.primary,
+          ],
+        ),
+      ),
+      padding: EdgeInsets.fromLTRB(
+        isMobile ? 16 : screenWidth < 900 ? 24 : 32,
+        MediaQuery.of(context).padding.top + 8,
+        isMobile ? 16 : screenWidth < 900 ? 24 : 32,
+        8,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _buildAvatar(),
+          SizedBox(width: isMobile ? 12 : 16),
+          Expanded(child: _buildUserInfo(context)),
+          _buildNotificationButton(),
+        ],
+      ),
     );
   }
 
@@ -55,37 +52,37 @@ class DashboardHeader extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          width: 64,
-          height: 64,
+          width: 48,
+          height: 48,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [AppColors.primary, AppColors.primary],
+              colors: [AppColors.surface, AppColors.surface],
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
                 color: AppColors.primary.withOpacity(0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
-          child: const Icon(Icons.person, color: Colors.white, size: 32),
+          child: const Icon(Icons.person, color: AppColors.primary, size: 24),
         ),
         Positioned(
           right: 0,
           bottom: 0,
           child: Container(
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               color: AppColors.success,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
+              border: Border.all(color: Colors.white, width: 1.5),
             ),
             child: const Icon(
               Icons.verified,
               color: Colors.white,
-              size: 12,
+              size: 8,
             ),
           ),
         ),
@@ -97,27 +94,34 @@ class DashboardHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           children: [
             Text(
               'Welcome back,',
-              style: AppTextStyles.bodySmall(context).copyWith(
+              style: TextStyle(
+                fontSize: 11,
                 fontWeight: FontWeight.w500,
+                color: AppColors.surface,
               ),
             ),
             const SizedBox(width: 4),
             const Icon(
               Icons.waving_hand,
-              size: 16,
+              size: 12,
               color: Color(0xFFFBBF24),
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 2),
         Text(
           userName,
-          style: AppTextStyles.heading4(context),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: AppColors.surface,
+          ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -127,26 +131,28 @@ class DashboardHeader extends StatelessWidget {
 
   Widget _buildNotificationButton() {
     return Container(
-      width: 48,
-      height: 48,
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.border),
       ),
       child: Stack(
         children: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            color: AppColors.textSecondary,
-            onPressed: () {},
+          Center(
+            child: Icon(
+              Icons.notifications_outlined,
+              color: AppColors.textSecondary,
+              size: 20,
+            ),
           ),
           Positioned(
-            right: 10,
-            top: 10,
+            right: 8,
+            top: 8,
             child: Container(
-              width: 8,
-              height: 8,
+              width: 7,
+              height: 7,
               decoration: BoxDecoration(
                 color: AppColors.error,
                 shape: BoxShape.circle,

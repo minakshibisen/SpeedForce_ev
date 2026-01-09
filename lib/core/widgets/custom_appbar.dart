@@ -153,7 +153,7 @@ class _SimpleHeader extends StatelessWidget {
           height: 56,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF6FBF44), Color(0xFF8EDC6E)],
+              colors: [ AppColors.primary,  AppColors.primary],
             ),
             borderRadius: BorderRadius.circular(16),
           ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Primary Colors
-  static const Color primary = Color(0xFF6FBF44); // Green for EV
-  static const Color secondary = Color(0xFF1E88E5); // Blue
+  static const Color secondary =  AppColors.primary; // Green for EV
+  static const Color primary = Color(0xff1866a9); // Blue
   static const Color accent = Color(0xFFFFB300); // Amber
 
   // Background Colors
